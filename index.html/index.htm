@@ -7,27 +7,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyCgJg0BjjjQWAlJ1rqWenjzB-aKxeX77B4",
-            authDomain: "casamento-26afe.firebaseapp.com",
-            projectId: "casamento-26afe",
-            storageBucket: "casamento-26afe.firebasestorage.app",
-            messagingSenderId: "156199249236",
-            appId: "1:156199249236:web:f7b8259810a60fbe58d4c1",
-            measurementId: "G-2Q4PF5TDCD"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-        window.db = db;
-        window.collection = collection;
-        window.addDoc = addDoc;
-        window.serverTimestamp = serverTimestamp;
-    </script>
     <script>
         tailwind.config = {
             theme: {
@@ -656,7 +635,23 @@
         </div>
     </div>
 
-    <script>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, serverTimestamp, onSnapshot, query } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCgJg0BjjjQWAlJ1rqWenjzB-aKxeX77B4",
+            authDomain: "casamento-26afe.firebaseapp.com",
+            projectId: "casamento-26afe",
+            storageBucket: "casamento-26afe.firebasestorage.app",
+            messagingSenderId: "156199249236",
+            appId: "1:156199249236:web:f7b8259810a60fbe58d4c1",
+            measurementId: "G-2Q4PF5TDCD"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
         const presentes = [
             { id: 1, nome: "Armário", icone: "🗄️", categoria: "cozinha", link: "" },
             { id: 2, nome: "Geladeira", icone: "❄️", categoria: "cozinha", link: "" },
@@ -713,7 +708,8 @@
             { id: 53, nome: "Sexto de Lixo Grande", icone: "🗑️", categoria: "lavanderia", link: "" },
         ];
 
-        let presentesConfirmados = JSON.parse(localStorage.getItem('presentesConfirmados_v2') || '[]');
+        // Set com nomes dos presentes confirmados (sincronizado com Firebase em tempo real)
+        let presentesConfirmados = new Set();
         let selectedGiftId = null;
         let selectedGiftName = '';
         let currentGiftLink = '';
@@ -721,7 +717,7 @@
         function renderPresentes() {
             const grid = document.getElementById('giftsGrid');
             grid.innerHTML = presentes.map(p => {
-                const confirmado = presentesConfirmados.includes(p.id);
+                const confirmado = presentesConfirmados.has(p.nome);
                 return `
                     <div class="gift-card ${confirmado ? 'confirmed' : ''} fade-in" data-category="${p.categoria}">
                         <div class="gift-image">${p.icone}</div>
@@ -758,7 +754,7 @@
             });
         }
 
-        function openModal(id) {
+        window.openModal = function(id) {
             const presente = presentes.find(p => p.id === id);
             if (!presente) return;
 
@@ -784,19 +780,19 @@
             }
 
             document.getElementById('modalOverlay').classList.add('active');
-        }
+        };
 
-        function closeModal() {
+        window.closeModal = function() {
             document.getElementById('modalOverlay').classList.remove('active');
-        }
+        };
 
-        function selectOption(label, value) {
+        window.selectOption = function(label, value) {
             document.querySelectorAll('.radio-option').forEach(opt => opt.classList.remove('selected'));
             label.classList.add('selected');
             label.querySelector('input').checked = true;
-        }
+        };
 
-        async function confirmGift() {
+        window.confirmGift = async function() {
             const nome = document.getElementById('guestName').value.trim();
             const mensagem = document.getElementById('guestMessage').value.trim();
             const tipo = document.querySelector('input[name="tipoPresente"]:checked').value;
@@ -807,16 +803,14 @@
             }
 
             try {
-                await window.addDoc(window.collection(window.db, 'confirmados'), {
+                await addDoc(collection(db, 'confirmados'), {
                     nome: nome,
                     presente: selectedGiftName,
                     tipo: tipo,
                     mensagem: mensagem || '',
-                    data: window.serverTimestamp()
+                    data: serverTimestamp()
                 });
 
-                presentesConfirmados.push(selectedGiftId);
-                localStorage.setItem('presentesConfirmados_v2', JSON.stringify(presentesConfirmados));
                 renderPresentes();
                 closeModal();
 
@@ -829,19 +823,31 @@
                 console.error('Erro:', error);
                 alert('Ocorreu um erro ao salvar. Tente novamente.');
             }
-        }
+        };
 
-        function copiarPixGeral() {
+        window.copiarPixGeral = function() {
             navigator.clipboard.writeText('casamento.leoeval@email.com').then(() => {
                 alert('Chave PIX copiada!');
             });
-        }
+        };
 
         document.getElementById('modalOverlay').addEventListener('click', function(e) {
             if (e.target === this) closeModal();
         });
 
-        renderPresentes();
+        // Listener em tempo real do Firebase — sincroniza confirmados
+        onSnapshot(query(collection(db, 'confirmados')), (snapshot) => {
+            presentesConfirmados.clear();
+            snapshot.forEach(doc => {
+                const data = doc.data();
+                if (data.presente) {
+                    presentesConfirmados.add(data.presente);
+                }
+            });
+            renderPresentes();
+        }, (error) => {
+            console.error('Erro ao sincronizar:', error);
+        });
     </script>
 </body>
 </html>
