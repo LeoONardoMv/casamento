@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Presentes - Léo & Val</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCgJg0BjjjQWAlJ1rqWenjzB-aKxeX77B4",
+            authDomain: "casamento-26afe.firebaseapp.com",
+            projectId: "casamento-26afe",
+            storageBucket: "casamento-26afe.firebasestorage.app",
+            messagingSenderId: "156199249236",
+            appId: "1:156199249236:web:f7b8259810a60fbe58d4c1",
+            measurementId: "G-2Q4PF5TDCD"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        window.db = db;
+        window.collection = collection;
+        window.addDoc = addDoc;
+        window.serverTimestamp = serverTimestamp;
+    </script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'serif': ['Playfair Display', 'serif'],
+                        'sans': ['Poppins', 'sans-serif'],
+                    },
+                    colors: {
+                        'halloween': {
+                            900: '#1a0a2e',
+                            800: '#2d1b4e',
+                            700: '#3d2b5e',
+                            600: '#f97316',
+                            500: '#fb923c',
+                            400: '#fdba74',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #1a0a2e 0%, #2d1b4e 50%, #1a0a2e 100%);
+        }
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(249, 115, 22, 0.2);
+        }
+        .modal-overlay {
+            background: rgba(26, 10, 46, 0.85);
+            backdrop-filter: blur(8px);
+        }
+        .sparkle {
+            animation: sparkle 2s infinite;
+        }
+        @keyframes sparkle {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.2); }
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .presente-confirmado {
+            position: relative;
+            opacity: 0.7;
+        }
+        .presente-confirmado::after {
+            content: 'JÁ FOI PRESENTEADO';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-15deg);
+            background: rgba(249, 115, 22, 0.9);
+            color: white;
+            padding: 8px 20px;
+            font-weight: bold;
+            font-size: 14px;
+            border-radius: 4px;
+            z-index: 10;
+            white-space: nowrap;
+        }
+    </style>
+</head>
+<body class="gradient-bg min-h-screen font-sans text-white">
+    <!-- Header -->
+    <header class="text-center py-12 px-4">
+        <div class="max-w-4xl mx-auto">
+            <div class="text-6xl mb-4">🎃💍</div>
+            <h1 class="font-serif text-4xl md:text-6xl font-bold mb-4 text-halloween-500">
+                Léo & Val
+            </h1>
+            <p class="text-xl text-gray-300 mb-2">14 de Fevereiro de 2026</p>
+            <p class="text-halloween-400 text-lg">🎃 Halloween Edition 🎃</p>
+            <div class="mt-6 inline-block bg-halloween-800/50 rounded-full px-6 py-3 border border-halloween-600/30">
+                <span class="text-halloween-400">Nossa Lista de Presentes</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mensagem -->
+    <section class="max-w-4xl mx-auto px-4 mb-10 text-center">
+        <p class="text-gray-300 text-lg leading-relaxed">
+            Queridos amigos e familiares, sua presença é o melhor presente! 
+            Mas se quiserem nos presentear, preparamos essa lista com muito carinho. 💕
+        </p>
+        <div class="mt-4 flex justify-center gap-4 flex-wrap">
+            <a href="confirmados.html" class="inline-flex items-center gap-2 bg-halloween-600 hover:bg-halloween-500 text-white px-6 py-3 rounded-full transition-all font-medium">
+                <i class="fas fa-list-check"></i>
+                Ver Presentes Confirmados
+            </a>
+        </div>
+    </section>
+
+    <!-- Lista de Presentes -->
+    <main class="max-w-6xl mx-auto px-4 pb-16">
+        <div id="presentes-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Cards serão gerados por JS -->
+        </div>
+    </main>
+
+    <!-- Modal -->
+    <div id="modal" class="fixed inset-0 z-50 hidden">
+        <div class="modal-overlay absolute inset-0" onclick="fecharModal()"></div>
+        <div class="absolute inset-0 flex items-center justify-center p-4">
+            <div class="bg-halloween-800 rounded-2xl p-8 max-w-md w-full relative border border-halloween-600/30 shadow-2xl fade-in">
+                <button onclick="fecharModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white text-2xl">
+                    <i class="fas fa-times"></i>
+                </button>
+                <div id="modal-content">
+                    <!-- Conteúdo dinâmico -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="text-center py-8 text-gray-500 text-sm">
+        <p>Com muito amor 💕 Léo & Val - 2026</p>
+    </footer>
+
+    <script>
+        const presentes = [
+            { id: 1, nome: "Jogo de Panelas", descricao: "Jogo completo de panelas antiaderentes", preco: "R$ 350,00", icone: "🍳", categoria: "Cozinha", link: "" },
+            { id: 2, nome: "Liquidificador", descricao: "Liquidificador potente 700W", preco: "R$ 200,00", icone: "🥤", categoria: "Cozinha", link: "" },
+            { id: 3, nome: "Jogo de Toalhas", descricao: "Jogo de toalhas de banho e rosto", preco: "R$ 150,00", icone: "🛁", categoria: "Banheiro", link: "" },
+            { id: 4, nome: "Aspirador de Pó", descricao: "Aspirador de pó vertical", preco: "R$ 400,00", icone: "🧹", categoria: "Limpeza", link: "" },
+            { id: 5, nome: "Cafeteira Elétrica", descricao: "Cafeteira elétrica programável", preco: "R$ 250,00", icone: "☕", categoria: "Cozinha", link: "" },
+            { id: 6, nome: "Jogo de Lençóis", descricao: "Jogo de lençóis queen size", preco: "R$ 180,00", icone: "🛏️", categoria: "Quarto", link: "" },
+            { id: 7, nome: "Air Fryer", descricao: "Fritadeira elétrica sem óleo 3,5L", preco: "R$ 350,00", icone: "🍟", categoria: "Cozinha", link: "" },
+            { id: 8, nome: "Ferro de Passar", descricao: "Ferro a vapor com base cerâmica", preco: "R$ 120,00", icone: "👔", categoria: "Limpeza", link: "" },
+            { id: 9, nome: "Jogo de Copos", descricao: "Jogo com 12 copos variados", preco: "R$ 100,00", icone: "🥛", categoria: "Cozinha", link: "" },
+            { id: 10, nome: "Máquina de Lavar", descricao: "Máquina de lavar 11kg", preco: "R$ 1.800,00", icone: "👕", categoria: "Eletrodoméstico", link: "" },
+            { id: 11, nome: "Micro-ondas", descricao: "Micro-ondas 20L com grill", preco: "R$ 500,00", icone: "📡", categoria: "Cozinha", link: "" },
+            { id: 12, nome: "Ventilador", descricao: "Ventilador de coluna 40cm", preco: "R$ 200,00", icone: "💨", categoria: "Eletrodoméstico", link: "" },
+            { id: 13, nome: "Aparelho de Jantar", descricao: "Aparelho completo para 6 pessoas", preco: "R$ 300,00", icone: "🍽️", categoria: "Cozinha", link: "" },
+            { id: 14, nome: "Conjunto de Facas", descricao: "Bloco de facas com 6 peças", preco: "R$ 180,00", icone: "🔪", categoria: "Cozinha", link: "" },
+            { id: 15, nome: "Smart TV", descricao: "Smart TV LED 43\" Full HD", preco: "R$ 1.500,00", icone: "📺", categoria: "Eletrodoméstico", link: "" },
+            { id: 16, nome: "Geladeira", descricao: "Geladeira duplex 380L", preco: "R$ 2.500,00", icone: "❄️", categoria: "Eletrodoméstico", link: "" },
+            { id: 17, nome: "Chaleira Elétrica", descricao: "Chaleira elétrica 1,7L", preco: "R$ 100,00", icone: "🫖", categoria: "Cozinha", link: "" },
+            { id: 18, nome: "Edredom", descricao: "Edredom queen size plush", preco: "R$ 200,00", icone: "🛌", categoria: "Quarto", link: "" },
+            { id: 19, nome: "Sanduicheira", descricao: "Grill e sanduicheira elétrica", preco: "R$ 120,00", icone: "🥪", categoria: "Cozinha", link: "" },
+            { id: 20, nome: "Cortinas", descricao: "Cortinas blackout para sala", preco: "R$ 250,00", icone: "🪟", categoria: "Decoração", link: "" },
+        ];
+
+        let presentesConfirmados = JSON.parse(localStorage.getItem('presentesConfirmados') || '[]');
+
+        function renderPresentes() {
+            const grid = document.getElementById('presentes-grid');
+            grid.innerHTML = presentes.map(p => {
+                const confirmado = presentesConfirmados.includes(p.id);
+                return `
+                    <div class="bg-halloween-800/60 rounded-xl p-6 border border-halloween-600/20 card-hover ${confirmado ? 'presente-confirmado' : ''}">
+                        <div class="flex items-start justify-between mb-4">
+                            <span class="text-4xl">${p.icone}</span>
+                            <span class="text-xs bg-halloween-600/20 text-halloween-400 px-3 py-1 rounded-full">${p.categoria}</span>
+                        </div>
+                        <h3 class="font-serif text-xl font-semibold mb-2 text-white">${p.nome}</h3>
+                        <p class="text-gray-400 text-sm mb-4">${p.descricao}</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-halloween-400 font-bold text-lg">${p.preco}</span>
+                            ${!confirmado 
+                                ? `<button onclick="abrirModal(${p.id})" class="bg-halloween-600 hover:bg-halloween-500 text-white px-4 py-2 rounded-lg text-sm font-medium transition-all">
+                                    Quero Presentear! 🎁
+                                </button>`
+                                : `<span class="text-green-400 text-sm font-medium"><i class="fas fa-check-circle"></i> Confirmado</span>`
+                            }
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function abrirModal(id) {
+            const presente = presentes.find(p => p.id === id);
+            const modal = document.getElementById('modal');
+            const content = document.getElementById('modal-content');
+            
+            content.innerHTML = `
+                <div class="text-center mb-6">
+                    <div class="text-6xl mb-4">${presente.icone}</div>
+                    <h2 class="font-serif text-2xl font-bold text-white mb-2">${presente.nome}</h2>
+                    <p class="text-halloween-400 font-bold text-xl">${presente.preco}</p>
+                </div>
+                <div class="space-y-4">
+                    <p class="text-gray-300 text-center text-sm">Escolha como deseja presentear:</p>
+                    
+                    <button onclick="confirmarFisico(${presente.id}, '${presente.nome}')" class="w-full bg-halloween-600 hover:bg-halloween-500 text-white py-3 rounded-xl font-medium transition-all flex items-center justify-center gap-2">
+                        <i class="fas fa-gift"></i>
+                        Vou comprar o presente físico
+                    </button>
+                    
+                    <button onclick="mostrarPix(${presente.id}, '${presente.nome}', '${presente.preco}')" class="w-full bg-green-600 hover:bg-green-500 text-white py-3 rounded-xl font-medium transition-all flex items-center justify-center gap-2">
+                        <i class="fas fa-qrcode"></i>
+                        Quero enviar via PIX
+                    </button>
+                    
+                    ${presente.link ? `
+                    <a href="${presente.link}" target="_blank" class="w-full bg-halloween-800 hover:bg-halloween-700 text-halloween-400 py-3 rounded-xl font-medium transition-all flex items-center justify-center gap-2 border border-halloween-600/30">
+                        <i class="fas fa-external-link-alt"></i>
+                        Ver sugestão de compra
+                    </a>
+                    ` : ''}
+                </div>
+            `;
+            
+            modal.classList.remove('hidden');
+        }
+
+        function mostrarPix(id, nome, preco) {
+            const content = document.getElementById('modal-content');
+            content.innerHTML = `
+                <div class="text-center mb-6">
+                    <div class="text-5xl mb-3">💰</div>
+                    <h2 class="font-serif text-xl font-bold text-white mb-2">PIX - ${nome}</h2>
+                    <p class="text-halloween-400 font-bold">${preco}</p>
+                </div>
+                <div class="bg-white/10 rounded-xl p-4 mb-4 text-center">
+                    <p class="text-sm text-gray-300 mb-2">Chave PIX:</p>
+                    <p id="chave-pix" class="text-lg font-mono text-halloween-400 font-bold break-all">CHAVE_PIX_AQUI</p>
+                    <button onclick="copiarPix()" class="mt-3 bg-halloween-600 hover:bg-halloween-500 text-white px-4 py-2 rounded-lg text-sm transition-all">
+                        <i class="fas fa-copy"></i> Copiar Chave
+                    </button>
+                </div>
+                <p class="text-gray-400 text-xs text-center mb-4">Depois de fazer o PIX, confirme abaixo:</p>
+                <button onclick="confirmarPix(${id}, '${nome}')" class="w-full bg-green-600 hover:bg-green-500 text-white py-3 rounded-xl font-medium transition-all">
+                    <i class="fas fa-check"></i> Já fiz o PIX
+                </button>
+            `;
+        }
+
+        function copiarPix() {
+            const chave = document.getElementById('chave-pix').textContent;
+            navigator.clipboard.writeText(chave).then(() => {
+                alert('Chave PIX copiada!');
+            });
+        }
+
+        async function confirmarFisico(id, nome) {
+            const nomePessoa = prompt('Qual é o seu nome?');
+            if (!nomePessoa) return;
+            
+            try {
+                await window.addDoc(window.collection(window.db, 'confirmados'), {
+                    nome: nomePessoa,
+                    presente: nome,
+                    tipo: 'fisico',
+                    data: window.serverTimestamp()
+                });
+                
+                presentesConfirmados.push(id);
+                localStorage.setItem('presentesConfirmados', JSON.stringify(presentesConfirmados));
+                renderPresentes();
+                fecharModal();
+                alert(`Obrigado, ${nomePessoa}! Seu presente foi confirmado! 🎉`);
+            } catch (error) {
+                console.error('Erro:', error);
+                alert('Ocorreu um erro ao salvar. Tente novamente.');
+            }
+        }
+
+        async function confirmarPix(id, nome) {
+            const nomePessoa = prompt('Qual é o seu nome?');
+            if (!nomePessoa) return;
+            
+            try {
+                await window.addDoc(window.collection(window.db, 'confirmados'), {
+                    nome: nomePessoa,
+                    presente: nome,
+                    tipo: 'pix',
+                    data: window.serverTimestamp()
+                });
+                
+                presentesConfirmados.push(id);
+                localStorage.setItem('presentesConfirmados', JSON.stringify(presentesConfirmados));
+                renderPresentes();
+                fecharModal();
+                alert(`Obrigado, ${nomePessoa}! Seu PIX foi confirmado! 🎉`);
+            } catch (error) {
+                console.error('Erro:', error);
+                alert('Ocorreu um erro ao salvar. Tente novamente.');
+            }
+        }
+
+        function fecharModal() {
+            document.getElementById('modal').classList.add('hidden');
+        }
+
+        renderPresentes();
+    </script>
+</body>
+</html>
