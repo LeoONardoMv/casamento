@@ -754,6 +754,9 @@
             });
         }
 
+        // Expor funções para o escopo global (onclick no HTML)
+        window.filterGifts = filterGifts;
+
         window.openModal = function(id) {
             const presente = presentes.find(p => p.id === id);
             if (!presente) return;
