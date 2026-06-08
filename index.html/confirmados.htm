@@ -6,28 +6,6 @@
     <title>Presentes Confirmados - Leo & Val</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-        import { getFirestore, collection, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyCgJg0BjjjQWAlJ1rqWenjzB-aKxeX77B4",
-            authDomain: "casamento-26afe.firebaseapp.com",
-            projectId: "casamento-26afe",
-            storageBucket: "casamento-26afe.firebasestorage.app",
-            messagingSenderId: "156199249236",
-            appId: "1:156199249236:web:f7b8259810a60fbe58d4c1",
-            measurementId: "G-2Q4PF5TDCD"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-        window.db = db;
-        window.collection = collection;
-        window.onSnapshot = onSnapshot;
-        window.query = query;
-        window.orderBy = orderBy;
-    </script>
     <style>
         :root {
             --primary: #c9a86c;
@@ -389,17 +367,37 @@
         <p style="margin-top: 5px; font-size: 0.75rem;">31 de Outubro de 2026</p>
     </footer>
 
-    <script>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+        import { getFirestore, collection, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCgJg0BjjjQWAlJ1rqWenjzB-aKxeX77B4",
+            authDomain: "casamento-26afe.firebaseapp.com",
+            projectId: "casamento-26afe",
+            storageBucket: "casamento-26afe.firebasestorage.app",
+            messagingSenderId: "156199249236",
+            appId: "1:156199249236:web:f7b8259810a60fbe58d4c1",
+            measurementId: "G-2Q4PF5TDCD"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
         function formatarData(data) {
             if (!data) return 'Agora mesmo';
-            const d = data.toDate ? data.toDate() : new Date(data);
-            return d.toLocaleString('pt-BR', {
-                day: '2-digit',
-                month: '2-digit',
-                year: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
-            });
+            try {
+                const d = data.toDate ? data.toDate() : new Date(data);
+                return d.toLocaleString('pt-BR', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+            } catch (e) {
+                return 'Data não disponível';
+            }
         }
 
         function renderConfirmados(docs) {
@@ -422,8 +420,8 @@
             }
 
             const ordenados = [...docs].sort((a, b) => {
-                const tA = a.data?.toDate ? a.data.toDate().getTime() : 0;
-                const tB = b.data?.toDate ? b.data.toDate().getTime() : 0;
+                const tA = a.data?.toDate ? a.data.toDate().getTime() : (new Date(a.data)).getTime();
+                const tB = b.data?.toDate ? b.data.toDate().getTime() : (new Date(b.data)).getTime();
                 return tB - tA;
             });
 
@@ -459,18 +457,19 @@
             document.getElementById('total-pix').textContent = pix;
         }
 
-        const q = window.query(window.collection(window.db, 'confirmados'), window.orderBy('data', 'desc'));
-        window.onSnapshot(q, (snapshot) => {
+        // Inicia o listener do Firestore
+        const q = query(collection(db, 'confirmados'), orderBy('data', 'desc'));
+        onSnapshot(q, (snapshot) => {
             const docs = [];
             snapshot.forEach(doc => docs.push(doc.data()));
             renderConfirmados(docs);
         }, (error) => {
-            console.error('Erro:', error);
+            console.error('Erro ao carregar confirmados:', error);
             document.getElementById('lista-confirmados').innerHTML = `
                 <div class="error-state fade-in">
                     <div class="icon" style="font-size: 2.5rem; margin-bottom: 10px;">⚠️</div>
                     <h3 style="font-family: 'Playfair Display', serif; margin-bottom: 8px;">Erro ao carregar</h3>
-                    <p>Verifique se o Firestore está configurado corretamente.</p>
+                    <p>${error.message || 'Verifique se o Firestore está configurado corretamente.'}</p>
                 </div>
             `;
         });
