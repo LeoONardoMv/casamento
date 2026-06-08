@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lista de Presentes - Léo & Val</title>
+    <title>Lista de Presentes - Leo & Val</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
@@ -37,13 +37,14 @@
                         'sans': ['Poppins', 'sans-serif'],
                     },
                     colors: {
-                        'halloween': {
-                            900: '#1a0a2e',
-                            800: '#2d1b4e',
-                            700: '#3d2b5e',
-                            600: '#f97316',
-                            500: '#fb923c',
-                            400: '#fdba74',
+                        'wed': {
+                            50: '#faf6f1',
+                            100: '#f0e6d6',
+                            200: '#e8ddd0',
+                            300: '#c9a86c',
+                            400: '#a8894d',
+                            500: '#3d3d3d',
+                            600: '#777777',
                         }
                     }
                 }
@@ -51,157 +52,685 @@
         }
     </script>
     <style>
-        .gradient-bg {
-            background: linear-gradient(135deg, #1a0a2e 0%, #2d1b4e 50%, #1a0a2e 100%);
+        :root {
+            --primary: #c9a86c;
+            --primary-dark: #a8894d;
+            --secondary: #f8f4ef;
+            --text: #3d3d3d;
+            --text-light: #777;
+            --white: #ffffff;
+            --border: #e8e0d4;
+            --green: #4a8b6f;
+            --green-light: #e8f5ee;
+            --blue: #5b8ec4;
+            --blue-light: #e8f0fa;
         }
-        .card-hover {
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            color: var(--text);
+            background-color: var(--secondary);
+            line-height: 1.6;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #faf6f1 0%, #f0e6d6 100%);
+            text-align: center;
+            padding: 80px 20px 60px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50px;
+            right: -50px;
+            width: 200px;
+            height: 200px;
+            background: var(--primary);
+            opacity: 0.1;
+            border-radius: 50%;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: -30px;
+            left: -30px;
+            width: 150px;
+            height: 150px;
+            background: var(--primary);
+            opacity: 0.08;
+            border-radius: 50%;
+        }
+
+        .hero h2 {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 300;
+            font-size: 1rem;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--primary-dark);
+            margin-bottom: 15px;
+        }
+
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 10px;
+        }
+
+        .hero .ampersand {
+            color: var(--primary);
+            font-style: italic;
+        }
+
+        .hero .date {
+            font-size: 1.1rem;
+            color: var(--text-light);
+            margin-top: 15px;
+            letter-spacing: 2px;
+        }
+
+        .hero .heart {
+            font-size: 2rem;
+            margin: 20px 0;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .filter-section {
+            background: var(--white);
+            padding: 25px 20px;
+            text-align: center;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .filter-section h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            color: var(--text);
+        }
+
+        .filter-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .filter-btn {
+            padding: 8px 20px;
+            border: 2px solid var(--border);
+            background: var(--white);
+            border-radius: 25px;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.9rem;
+            color: var(--text-light);
             transition: all 0.3s ease;
         }
-        .card-hover:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 40px rgba(249, 115, 22, 0.2);
+
+        .filter-btn:hover, .filter-btn.active {
+            background: var(--primary);
+            color: var(--white);
+            border-color: var(--primary);
         }
-        .modal-overlay {
-            background: rgba(26, 10, 46, 0.85);
-            backdrop-filter: blur(8px);
+
+        .gifts-section {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 50px 20px;
         }
-        .sparkle {
-            animation: sparkle 2s infinite;
+
+        .gifts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 25px;
         }
-        @keyframes sparkle {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.5; transform: scale(1.2); }
-        }
-        .fade-in {
-            animation: fadeIn 0.5s ease-in;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .presente-confirmado {
+
+        .gift-card {
+            background: var(--white);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
             position: relative;
-            opacity: 0.7;
         }
-        .presente-confirmado::after {
+
+        .gift-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        }
+
+        .gift-card.confirmed {
+            opacity: 0.75;
+            pointer-events: none;
+        }
+
+        .gift-card.confirmed::after {
             content: 'JÁ FOI PRESENTEADO';
             position: absolute;
             top: 50%;
             left: 50%;
-            transform: translate(-50%, -50%) rotate(-15deg);
-            background: rgba(249, 115, 22, 0.9);
+            transform: translate(-50%, -50%) rotate(-12deg);
+            background: rgba(201, 168, 108, 0.95);
             color: white;
-            padding: 8px 20px;
+            padding: 10px 24px;
             font-weight: bold;
-            font-size: 14px;
-            border-radius: 4px;
+            font-size: 13px;
+            border-radius: 6px;
             z-index: 10;
             white-space: nowrap;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .gift-image {
+            width: 100%;
+            height: 160px;
+            background: linear-gradient(135deg, #f0e6d6 0%, #e8ddd0 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3.5rem;
+            position: relative;
+        }
+
+        .gift-info {
+            padding: 18px;
+        }
+
+        .gift-category {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--primary-dark);
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .gift-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 10px;
+        }
+
+        .gift-btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .gift-btn.primary {
+            background: var(--primary);
+            color: var(--white);
+        }
+
+        .gift-btn.primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .gift-btn.confirmed-btn {
+            background: #e8f5ee;
+            color: var(--green);
+            cursor: default;
+        }
+
+        .message-section {
+            background: linear-gradient(135deg, #faf6f1 0%, #f0e6d6 100%);
+            padding: 60px 20px;
+            text-align: center;
+        }
+
+        .message-box {
+            max-width: 600px;
+            margin: 0 auto;
+            background: var(--white);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+        }
+
+        .message-box h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+
+        .message-box p {
+            color: var(--text-light);
+            margin-bottom: 25px;
+            line-height: 1.7;
+        }
+
+        .pix-box {
+            background: var(--green-light);
+            border: 2px dashed var(--green);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .pix-box h4 {
+            color: var(--green);
+            font-size: 1rem;
+            margin-bottom: 10px;
+        }
+
+        .pix-key {
+            font-family: monospace;
+            font-size: 1.1rem;
+            color: var(--text);
+            background: var(--white);
+            padding: 10px 20px;
+            border-radius: 8px;
+            display: inline-block;
+            margin-top: 5px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .pix-key:hover {
+            background: var(--green);
+            color: white;
+        }
+
+        footer {
+            background: var(--text);
+            color: var(--white);
+            text-align: center;
+            padding: 30px 20px;
+        }
+
+        footer p {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        footer .heart-footer {
+            color: var(--primary);
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.2rem; }
+            .gifts-grid { grid-template-columns: 1fr; }
+        }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .modal-overlay.active { display: flex; }
+
+        .modal {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 35px;
+            max-width: 500px;
+            width: 100%;
+            animation: modalIn 0.3s ease;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        @keyframes modalIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .modal h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.4rem;
+            margin-bottom: 5px;
+            text-align: center;
+        }
+
+        .modal .gift-title {
+            text-align: center;
+            color: var(--primary-dark);
+            font-weight: 600;
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+        }
+
+        .modal-label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--text);
+            margin-bottom: 6px;
+            margin-top: 15px;
+        }
+
+        .modal-input, .modal-textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.95rem;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .modal-input:focus, .modal-textarea:focus {
+            border-color: var(--primary);
+        }
+
+        .modal-textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 5px;
+        }
+
+        .radio-option {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .radio-option:hover, .radio-option.selected {
+            border-color: var(--primary);
+            background: var(--secondary);
+        }
+
+        .radio-option input {
+            accent-color: var(--primary);
+            width: 18px;
+            height: 18px;
+        }
+
+        .sugestao-box {
+            background: var(--blue-light);
+            border: 2px dashed var(--blue);
+            border-radius: 12px;
+            padding: 15px;
+            margin-top: 15px;
+            text-align: center;
+        }
+
+        .sugestao-box p {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            margin-bottom: 8px;
+        }
+
+        .sugestao-link {
+            display: inline-block;
+            background: var(--blue);
+            color: var(--white);
+            padding: 10px 22px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: background 0.3s;
+        }
+
+        .sugestao-link:hover {
+            background: #4a7aad;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 25px;
+        }
+
+        .modal-btn {
+            padding: 12px 28px;
+            border: none;
+            border-radius: 25px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .modal-btn.confirm {
+            background: var(--primary);
+            color: var(--white);
+        }
+
+        .modal-btn.confirm:hover {
+            background: var(--primary-dark);
+        }
+
+        .modal-btn.cancel {
+            background: var(--secondary);
+            color: var(--text);
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .btn-confirmados {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--white);
+            border: 2px solid var(--primary);
+            color: var(--primary-dark);
+            padding: 10px 24px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+            margin-top: 15px;
+        }
+
+        .btn-confirmados:hover {
+            background: var(--primary);
+            color: var(--white);
         }
     </style>
 </head>
-<body class="gradient-bg min-h-screen font-sans text-white">
-    <!-- Header -->
-    <header class="text-center py-12 px-4">
-        <div class="max-w-4xl mx-auto">
-            <div class="text-6xl mb-4">🎃💍</div>
-            <h1 class="font-serif text-4xl md:text-6xl font-bold mb-4 text-halloween-500">
-                Léo & Val
-            </h1>
-            <p class="text-xl text-gray-300 mb-2">14 de Fevereiro de 2026</p>
-            <p class="text-halloween-400 text-lg">🎃 Halloween Edition 🎃</p>
-            <div class="mt-6 inline-block bg-halloween-800/50 rounded-full px-6 py-3 border border-halloween-600/30">
-                <span class="text-halloween-400">Nossa Lista de Presentes</span>
-            </div>
-        </div>
-    </header>
+<body>
 
-    <!-- Mensagem -->
-    <section class="max-w-4xl mx-auto px-4 mb-10 text-center">
-        <p class="text-gray-300 text-lg leading-relaxed">
-            Queridos amigos e familiares, sua presença é o melhor presente! 
-            Mas se quiserem nos presentear, preparamos essa lista com muito carinho. 💕
-        </p>
-        <div class="mt-4 flex justify-center gap-4 flex-wrap">
-            <a href="confirmados.html" class="inline-flex items-center gap-2 bg-halloween-600 hover:bg-halloween-500 text-white px-6 py-3 rounded-full transition-all font-medium">
-                <i class="fas fa-list-check"></i>
-                Ver Presentes Confirmados
-            </a>
+    <section class="hero">
+        <h2>Vamos nos casar!</h2>
+        <h1>Leo <span class="ampersand">&</span> Val</h1>
+        <div class="heart">💍</div>
+        <p class="date">31 de Outubro de 2026</p>
+        <a href="confirmados.html" class="btn-confirmados">
+            <i class="fas fa-list-check"></i>
+            Ver Presentes Confirmados
+        </a>
+    </section>
+
+    <section class="filter-section">
+        <h3>Categorias de Presentes</h3>
+        <div class="filter-buttons">
+            <button class="filter-btn active" onclick="filterGifts('todos')">Todos</button>
+            <button class="filter-btn" onclick="filterGifts('cozinha')">Cozinha</button>
+            <button class="filter-btn" onclick="filterGifts('sala')">Sala</button>
+            <button class="filter-btn" onclick="filterGifts('quarto')">Quarto</button>
+            <button class="filter-btn" onclick="filterGifts('banheiro')">Banheiro</button>
+            <button class="filter-btn" onclick="filterGifts('lavanderia')">Lavanderia</button>
         </div>
     </section>
 
-    <!-- Lista de Presentes -->
-    <main class="max-w-6xl mx-auto px-4 pb-16">
-        <div id="presentes-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <!-- Cards serão gerados por JS -->
-        </div>
-    </main>
+    <section class="gifts-section">
+        <div class="gifts-grid" id="giftsGrid"></div>
+    </section>
 
-    <!-- Modal -->
-    <div id="modal" class="fixed inset-0 z-50 hidden">
-        <div class="modal-overlay absolute inset-0" onclick="fecharModal()"></div>
-        <div class="absolute inset-0 flex items-center justify-center p-4">
-            <div class="bg-halloween-800 rounded-2xl p-8 max-w-md w-full relative border border-halloween-600/30 shadow-2xl fade-in">
-                <button onclick="fecharModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white text-2xl">
-                    <i class="fas fa-times"></i>
-                </button>
-                <div id="modal-content">
-                    <!-- Conteúdo dinâmico -->
-                </div>
+    <section class="message-section">
+        <div class="message-box">
+            <h3>💌 Uma mensagem especial</h3>
+            <p>Queridos amigos e familiares, sua presença é o melhor presente! Mas se quiser nos presentear, ficaremos muito felizes. Você pode escolher um item da lista ou fazer uma contribuição via Pix para ajudar a construir nosso novo lar.</p>
+            <div class="pix-box">
+                <h4>🔑 Chave Pix (E-mail)</h4>
+                <div class="pix-key" onclick="copiarPixGeral()" title="Clique para copiar">casamento.leoeval@email.com</div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>Feito com <span class="heart-footer">♥</span> por Leo & Val</p>
+        <p style="margin-top: 5px; font-size: 0.8rem;">31 de Outubro de 2026</p>
+    </footer>
+
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal">
+            <h3>Confirmar Presente</h3>
+            <div class="gift-title" id="modalGiftName">Nome do Presente</div>
+
+            <label class="modal-label">Seu nome completo</label>
+            <input type="text" class="modal-input" placeholder="Digite seu nome" id="guestName">
+
+            <label class="modal-label">Motivação / Mensagem (opcional)</label>
+            <textarea class="modal-textarea" placeholder="Escreva uma mensagem carinhosa para o casal..." id="guestMessage"></textarea>
+
+            <label class="modal-label">Como você vai presentear?</label>
+            <div class="radio-group">
+                <label class="radio-option selected" onclick="selectOption(this, 'fisico')">
+                    <input type="radio" name="tipoPresente" value="fisico" checked>
+                    <span>🎁 Vou entregar o presente</span>
+                </label>
+                <label class="radio-option" onclick="selectOption(this, 'pix')">
+                    <input type="radio" name="tipoPresente" value="pix">
+                    <span>💸 Vou enviar via Pix</span>
+                </label>
+            </div>
+
+            <div class="sugestao-box" id="sugestaoBox" style="display: none;">
+                <p>📌 Sugestão de onde comprar:</p>
+                <a href="#" target="_blank" class="sugestao-link" id="sugestaoLink">Ver na loja →</a>
+            </div>
+
+            <div class="modal-buttons">
+                <button class="modal-btn cancel" onclick="closeModal()">Cancelar</button>
+                <button class="modal-btn confirm" onclick="confirmGift()">Confirmar Presente</button>
             </div>
         </div>
     </div>
 
-    <!-- Footer -->
-    <footer class="text-center py-8 text-gray-500 text-sm">
-        <p>Com muito amor 💕 Léo & Val - 2026</p>
-    </footer>
-
     <script>
         const presentes = [
-            { id: 1, nome: "Jogo de Panelas", descricao: "Jogo completo de panelas antiaderentes", preco: "R$ 350,00", icone: "🍳", categoria: "Cozinha", link: "" },
-            { id: 2, nome: "Liquidificador", descricao: "Liquidificador potente 700W", preco: "R$ 200,00", icone: "🥤", categoria: "Cozinha", link: "" },
-            { id: 3, nome: "Jogo de Toalhas", descricao: "Jogo de toalhas de banho e rosto", preco: "R$ 150,00", icone: "🛁", categoria: "Banheiro", link: "" },
-            { id: 4, nome: "Aspirador de Pó", descricao: "Aspirador de pó vertical", preco: "R$ 400,00", icone: "🧹", categoria: "Limpeza", link: "" },
-            { id: 5, nome: "Cafeteira Elétrica", descricao: "Cafeteira elétrica programável", preco: "R$ 250,00", icone: "☕", categoria: "Cozinha", link: "" },
-            { id: 6, nome: "Jogo de Lençóis", descricao: "Jogo de lençóis queen size", preco: "R$ 180,00", icone: "🛏️", categoria: "Quarto", link: "" },
-            { id: 7, nome: "Air Fryer", descricao: "Fritadeira elétrica sem óleo 3,5L", preco: "R$ 350,00", icone: "🍟", categoria: "Cozinha", link: "" },
-            { id: 8, nome: "Ferro de Passar", descricao: "Ferro a vapor com base cerâmica", preco: "R$ 120,00", icone: "👔", categoria: "Limpeza", link: "" },
-            { id: 9, nome: "Jogo de Copos", descricao: "Jogo com 12 copos variados", preco: "R$ 100,00", icone: "🥛", categoria: "Cozinha", link: "" },
-            { id: 10, nome: "Máquina de Lavar", descricao: "Máquina de lavar 11kg", preco: "R$ 1.800,00", icone: "👕", categoria: "Eletrodoméstico", link: "" },
-            { id: 11, nome: "Micro-ondas", descricao: "Micro-ondas 20L com grill", preco: "R$ 500,00", icone: "📡", categoria: "Cozinha", link: "" },
-            { id: 12, nome: "Ventilador", descricao: "Ventilador de coluna 40cm", preco: "R$ 200,00", icone: "💨", categoria: "Eletrodoméstico", link: "" },
-            { id: 13, nome: "Aparelho de Jantar", descricao: "Aparelho completo para 6 pessoas", preco: "R$ 300,00", icone: "🍽️", categoria: "Cozinha", link: "" },
-            { id: 14, nome: "Conjunto de Facas", descricao: "Bloco de facas com 6 peças", preco: "R$ 180,00", icone: "🔪", categoria: "Cozinha", link: "" },
-            { id: 15, nome: "Smart TV", descricao: "Smart TV LED 43\" Full HD", preco: "R$ 1.500,00", icone: "📺", categoria: "Eletrodoméstico", link: "" },
-            { id: 16, nome: "Geladeira", descricao: "Geladeira duplex 380L", preco: "R$ 2.500,00", icone: "❄️", categoria: "Eletrodoméstico", link: "" },
-            { id: 17, nome: "Chaleira Elétrica", descricao: "Chaleira elétrica 1,7L", preco: "R$ 100,00", icone: "🫖", categoria: "Cozinha", link: "" },
-            { id: 18, nome: "Edredom", descricao: "Edredom queen size plush", preco: "R$ 200,00", icone: "🛌", categoria: "Quarto", link: "" },
-            { id: 19, nome: "Sanduicheira", descricao: "Grill e sanduicheira elétrica", preco: "R$ 120,00", icone: "🥪", categoria: "Cozinha", link: "" },
-            { id: 20, nome: "Cortinas", descricao: "Cortinas blackout para sala", preco: "R$ 250,00", icone: "🪟", categoria: "Decoração", link: "" },
+            { id: 1, nome: "Armário", icone: "🗄️", categoria: "cozinha", link: "" },
+            { id: 2, nome: "Geladeira", icone: "❄️", categoria: "cozinha", link: "" },
+            { id: 3, nome: "Micro-ondas", icone: "📟", categoria: "cozinha", link: "" },
+            { id: 4, nome: "Liquidificador", icone: "🌪️", categoria: "cozinha", link: "https://www.mercadolivre.com.br/liquidificador-electrolux-27-litros-preto-potente-jarra-alta-capacidade-lmina-triforce-3-velocidades-pes-antiderrapantes-copo-resistente-vitaminas-sucos-receitas-cozinha-casa-premium-600w/p/MLB70034440?pdp_filters=item_id:MLB6808278248#is_advertising=true&searchVariation=MLB70034440&backend_model=search-backend&be_origin=backend&position=28&search_layout=grid&type=pad&tracking_id=e48a0482-693e-4cf2-b701-f299a5e2885a&ad_domain=VQCATCORE_LST&ad_position=28&ad_click_id=MzI1ZjY2MDEtNjVmOC00YzFiLWI3NWUtOGE4MWY0NzI0NTU4" },
+            { id: 5, nome: "Sanduicheira", icone: "🥪", categoria: "cozinha", link: "" },
+            { id: 6, nome: "Batedeira", icone: "🍰", categoria: "cozinha", link: "" },
+            { id: 7, nome: "Aparelho de Jantar", icone: "🍽️", categoria: "cozinha", link: "" },
+            { id: 8, nome: "Jogo de Copos", icone: "🥛", categoria: "cozinha", link: "" },
+            { id: 9, nome: "Jogo de Taças", icone: "🍷", categoria: "cozinha", link: "" },
+            { id: 10, nome: "Jogo de Travessa", icone: "🥘", categoria: "cozinha", link: "" },
+            { id: 11, nome: "Jogo de Panela", icone: "🍳", categoria: "cozinha", link: "" },
+            { id: 12, nome: "Faqueiro", icone: "🍴", categoria: "cozinha", link: "" },
+            { id: 13, nome: "Pano de Prato", icone: "🧽", categoria: "cozinha", link: "" },
+            { id: 14, nome: "Toalha de Mesa", icone: "🧵", categoria: "cozinha", link: "" },
+            { id: 15, nome: "Formas de Alumínio", icone: "🥧", categoria: "cozinha", link: "" },
+            { id: 16, nome: "Potes", icone: "🫙", categoria: "cozinha", link: "" },
+            { id: 17, nome: "Jarra", icone: "🏺", categoria: "cozinha", link: "" },
+            { id: 18, nome: "Fruteira", icone: "🍎", categoria: "cozinha", link: "" },
+            { id: 19, nome: "Sexto de Lixo", icone: "🗑️", categoria: "cozinha", link: "" },
+            { id: 20, nome: "Abri Tudo", icone: "🥫", categoria: "cozinha", link: "" },
+            { id: 21, nome: "Mini Processador", icone: "⚡", categoria: "cozinha", link: "" },
+            { id: 22, nome: "Assadeira", icone: "🥘", categoria: "cozinha", link: "" },
+            { id: 23, nome: "Garrafa Térmica", icone: "🌡️", categoria: "cozinha", link: "" },
+            { id: 24, nome: "Tábua de Carne", icone: "🪵", categoria: "cozinha", link: "" },
+            { id: 25, nome: "Utensílios de Cozinha", icone: "🔪", categoria: "cozinha", link: "" },
+            { id: 26, nome: "Sofá", icone: "🛋️", categoria: "sala", link: "" },
+            { id: 27, nome: "Televisão", icone: "📺", categoria: "sala", link: "" },
+            { id: 28, nome: "Tapete", icone: "🧶", categoria: "sala", link: "" },
+            { id: 29, nome: "Almofadas", icone: "🪑", categoria: "sala", link: "" },
+            { id: 30, nome: "Painel ou Estante", icone: "🖼️", categoria: "sala", link: "" },
+            { id: 31, nome: "Cama", icone: "🛏️", categoria: "quarto", link: "" },
+            { id: 32, nome: "Guarda Roupa", icone: "👕", categoria: "quarto", link: "" },
+            { id: 33, nome: "Móvel de Cabeceira", icone: "🛏️", categoria: "quarto", link: "" },
+            { id: 34, nome: "Lençol", icone: "🛌", categoria: "quarto", link: "" },
+            { id: 35, nome: "Jogo de Cama", icone: "🛏️", categoria: "quarto", link: "" },
+            { id: 36, nome: "Edredom", icone: "🛌", categoria: "quarto", link: "" },
+            { id: 37, nome: "Travesseiro", icone: "🛌", categoria: "quarto", link: "" },
+            { id: 38, nome: "Espelho", icone: "🪞", categoria: "quarto", link: "" },
+            { id: 39, nome: "Sapateira", icone: "👟", categoria: "quarto", link: "" },
+            { id: 40, nome: "Toalha", icone: "🧖", categoria: "banheiro", link: "" },
+            { id: 41, nome: "Espelho", icone: "🪞", categoria: "banheiro", link: "" },
+            { id: 42, nome: "Porta Escova", icone: "🪥", categoria: "banheiro", link: "" },
+            { id: 43, nome: "Tapetes", icone: "🧶", categoria: "banheiro", link: "" },
+            { id: 44, nome: "Lixeira", icone: "🗑️", categoria: "banheiro", link: "" },
+            { id: 45, nome: "Saboneteira", icone: "🧴", categoria: "banheiro", link: "" },
+            { id: 46, nome: "Vassoura", icone: "🧹", categoria: "lavanderia", link: "" },
+            { id: 47, nome: "Varal", icone: "👕", categoria: "lavanderia", link: "" },
+            { id: 48, nome: "Kit de Ferramenta", icone: "🔧", categoria: "lavanderia", link: "" },
+            { id: 49, nome: "Ferro de Passar", icone: "🔥", categoria: "lavanderia", link: "" },
+            { id: 50, nome: "Tanquinho de Roupa", icone: "🧺", categoria: "lavanderia", link: "" },
+            { id: 51, nome: "Mop", icone: "🧽", categoria: "lavanderia", link: "" },
+            { id: 52, nome: "Panos de Chão", icone: "🧹", categoria: "lavanderia", link: "" },
+            { id: 53, nome: "Sexto de Lixo Grande", icone: "🗑️", categoria: "lavanderia", link: "" },
         ];
 
-        let presentesConfirmados = JSON.parse(localStorage.getItem('presentesConfirmados') || '[]');
+        let presentesConfirmados = JSON.parse(localStorage.getItem('presentesConfirmados_v2') || '[]');
+        let selectedGiftId = null;
+        let selectedGiftName = '';
+        let currentGiftLink = '';
 
         function renderPresentes() {
-            const grid = document.getElementById('presentes-grid');
+            const grid = document.getElementById('giftsGrid');
             grid.innerHTML = presentes.map(p => {
                 const confirmado = presentesConfirmados.includes(p.id);
                 return `
-                    <div class="bg-halloween-800/60 rounded-xl p-6 border border-halloween-600/20 card-hover ${confirmado ? 'presente-confirmado' : ''}">
-                        <div class="flex items-start justify-between mb-4">
-                            <span class="text-4xl">${p.icone}</span>
-                            <span class="text-xs bg-halloween-600/20 text-halloween-400 px-3 py-1 rounded-full">${p.categoria}</span>
-                        </div>
-                        <h3 class="font-serif text-xl font-semibold mb-2 text-white">${p.nome}</h3>
-                        <p class="text-gray-400 text-sm mb-4">${p.descricao}</p>
-                        <div class="flex items-center justify-between">
-                            <span class="text-halloween-400 font-bold text-lg">${p.preco}</span>
+                    <div class="gift-card ${confirmado ? 'confirmed' : ''} fade-in" data-category="${p.categoria}">
+                        <div class="gift-image">${p.icone}</div>
+                        <div class="gift-info">
+                            <div class="gift-category">${p.categoria}</div>
+                            <div class="gift-name">${p.nome}</div>
                             ${!confirmado 
-                                ? `<button onclick="abrirModal(${p.id})" class="bg-halloween-600 hover:bg-halloween-500 text-white px-4 py-2 rounded-lg text-sm font-medium transition-all">
-                                    Quero Presentear! 🎁
-                                </button>`
-                                : `<span class="text-green-400 text-sm font-medium"><i class="fas fa-check-circle"></i> Confirmado</span>`
+                                ? `<button class="gift-btn primary" onclick="openModal(${p.id})">Quero Presentear</button>`
+                                : `<button class="gift-btn confirmed-btn" disabled><i class="fas fa-check-circle"></i> Confirmado</button>`
                             }
                         </div>
                     </div>
@@ -209,120 +738,108 @@
             }).join('');
         }
 
-        function abrirModal(id) {
+        function filterGifts(category) {
+            const buttons = document.querySelectorAll('.filter-btn');
+            buttons.forEach(btn => {
+                btn.classList.remove('active');
+                const btnText = btn.textContent.toLowerCase();
+                if ((category === 'todos' && btnText === 'todos') || btnText === category) {
+                    btn.classList.add('active');
+                }
+            });
+
+            const cards = document.querySelectorAll('.gift-card');
+            cards.forEach(card => {
+                if (category === 'todos' || card.dataset.category === category) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        function openModal(id) {
             const presente = presentes.find(p => p.id === id);
-            const modal = document.getElementById('modal');
-            const content = document.getElementById('modal-content');
-            
-            content.innerHTML = `
-                <div class="text-center mb-6">
-                    <div class="text-6xl mb-4">${presente.icone}</div>
-                    <h2 class="font-serif text-2xl font-bold text-white mb-2">${presente.nome}</h2>
-                    <p class="text-halloween-400 font-bold text-xl">${presente.preco}</p>
-                </div>
-                <div class="space-y-4">
-                    <p class="text-gray-300 text-center text-sm">Escolha como deseja presentear:</p>
-                    
-                    <button onclick="confirmarFisico(${presente.id}, '${presente.nome}')" class="w-full bg-halloween-600 hover:bg-halloween-500 text-white py-3 rounded-xl font-medium transition-all flex items-center justify-center gap-2">
-                        <i class="fas fa-gift"></i>
-                        Vou comprar o presente físico
-                    </button>
-                    
-                    <button onclick="mostrarPix(${presente.id}, '${presente.nome}', '${presente.preco}')" class="w-full bg-green-600 hover:bg-green-500 text-white py-3 rounded-xl font-medium transition-all flex items-center justify-center gap-2">
-                        <i class="fas fa-qrcode"></i>
-                        Quero enviar via PIX
-                    </button>
-                    
-                    ${presente.link ? `
-                    <a href="${presente.link}" target="_blank" class="w-full bg-halloween-800 hover:bg-halloween-700 text-halloween-400 py-3 rounded-xl font-medium transition-all flex items-center justify-center gap-2 border border-halloween-600/30">
-                        <i class="fas fa-external-link-alt"></i>
-                        Ver sugestão de compra
-                    </a>
-                    ` : ''}
-                </div>
-            `;
-            
-            modal.classList.remove('hidden');
+            if (!presente) return;
+
+            selectedGiftId = id;
+            selectedGiftName = presente.nome;
+            currentGiftLink = presente.link;
+
+            document.getElementById('modalGiftName').textContent = presente.nome;
+            document.getElementById('guestName').value = '';
+            document.getElementById('guestMessage').value = '';
+
+            document.querySelectorAll('.radio-option').forEach(opt => opt.classList.remove('selected'));
+            document.querySelectorAll('.radio-option')[0].classList.add('selected');
+            document.querySelector('input[value="fisico"]').checked = true;
+
+            const sugestaoBox = document.getElementById('sugestaoBox');
+            const sugestaoLink = document.getElementById('sugestaoLink');
+            if (currentGiftLink && currentGiftLink !== 'SEU_LINK_AQUI' && currentGiftLink !== '') {
+                sugestaoBox.style.display = 'block';
+                sugestaoLink.href = currentGiftLink;
+            } else {
+                sugestaoBox.style.display = 'none';
+            }
+
+            document.getElementById('modalOverlay').classList.add('active');
         }
 
-        function mostrarPix(id, nome, preco) {
-            const content = document.getElementById('modal-content');
-            content.innerHTML = `
-                <div class="text-center mb-6">
-                    <div class="text-5xl mb-3">💰</div>
-                    <h2 class="font-serif text-xl font-bold text-white mb-2">PIX - ${nome}</h2>
-                    <p class="text-halloween-400 font-bold">${preco}</p>
-                </div>
-                <div class="bg-white/10 rounded-xl p-4 mb-4 text-center">
-                    <p class="text-sm text-gray-300 mb-2">Chave PIX:</p>
-                    <p id="chave-pix" class="text-lg font-mono text-halloween-400 font-bold break-all">CHAVE_PIX_AQUI</p>
-                    <button onclick="copiarPix()" class="mt-3 bg-halloween-600 hover:bg-halloween-500 text-white px-4 py-2 rounded-lg text-sm transition-all">
-                        <i class="fas fa-copy"></i> Copiar Chave
-                    </button>
-                </div>
-                <p class="text-gray-400 text-xs text-center mb-4">Depois de fazer o PIX, confirme abaixo:</p>
-                <button onclick="confirmarPix(${id}, '${nome}')" class="w-full bg-green-600 hover:bg-green-500 text-white py-3 rounded-xl font-medium transition-all">
-                    <i class="fas fa-check"></i> Já fiz o PIX
-                </button>
-            `;
+        function closeModal() {
+            document.getElementById('modalOverlay').classList.remove('active');
         }
 
-        function copiarPix() {
-            const chave = document.getElementById('chave-pix').textContent;
-            navigator.clipboard.writeText(chave).then(() => {
+        function selectOption(label, value) {
+            document.querySelectorAll('.radio-option').forEach(opt => opt.classList.remove('selected'));
+            label.classList.add('selected');
+            label.querySelector('input').checked = true;
+        }
+
+        async function confirmGift() {
+            const nome = document.getElementById('guestName').value.trim();
+            const mensagem = document.getElementById('guestMessage').value.trim();
+            const tipo = document.querySelector('input[name="tipoPresente"]:checked').value;
+
+            if (!nome) {
+                alert('Por favor, digite seu nome!');
+                return;
+            }
+
+            try {
+                await window.addDoc(window.collection(window.db, 'confirmados'), {
+                    nome: nome,
+                    presente: selectedGiftName,
+                    tipo: tipo,
+                    mensagem: mensagem || '',
+                    data: window.serverTimestamp()
+                });
+
+                presentesConfirmados.push(selectedGiftId);
+                localStorage.setItem('presentesConfirmados_v2', JSON.stringify(presentesConfirmados));
+                renderPresentes();
+                closeModal();
+
+                let tipoTexto = tipo === 'fisico' ? 'vai entregar o presente pessoalmente' : 'vai enviar via Pix';
+                let msgAlert = `Obrigado, ${nome}!\n\nVocê escolheu presentear: ${selectedGiftName}\nForma: ${tipoTexto}`;
+                if (mensagem) msgAlert += `\n\nSua mensagem:\n"${mensagem}"`;
+                msgAlert += `\n\nLeo e Val agradecem de coração! 💕`;
+                alert(msgAlert);
+            } catch (error) {
+                console.error('Erro:', error);
+                alert('Ocorreu um erro ao salvar. Tente novamente.');
+            }
+        }
+
+        function copiarPixGeral() {
+            navigator.clipboard.writeText('casamento.leoeval@email.com').then(() => {
                 alert('Chave PIX copiada!');
             });
         }
 
-        async function confirmarFisico(id, nome) {
-            const nomePessoa = prompt('Qual é o seu nome?');
-            if (!nomePessoa) return;
-            
-            try {
-                await window.addDoc(window.collection(window.db, 'confirmados'), {
-                    nome: nomePessoa,
-                    presente: nome,
-                    tipo: 'fisico',
-                    data: window.serverTimestamp()
-                });
-                
-                presentesConfirmados.push(id);
-                localStorage.setItem('presentesConfirmados', JSON.stringify(presentesConfirmados));
-                renderPresentes();
-                fecharModal();
-                alert(`Obrigado, ${nomePessoa}! Seu presente foi confirmado! 🎉`);
-            } catch (error) {
-                console.error('Erro:', error);
-                alert('Ocorreu um erro ao salvar. Tente novamente.');
-            }
-        }
-
-        async function confirmarPix(id, nome) {
-            const nomePessoa = prompt('Qual é o seu nome?');
-            if (!nomePessoa) return;
-            
-            try {
-                await window.addDoc(window.collection(window.db, 'confirmados'), {
-                    nome: nomePessoa,
-                    presente: nome,
-                    tipo: 'pix',
-                    data: window.serverTimestamp()
-                });
-                
-                presentesConfirmados.push(id);
-                localStorage.setItem('presentesConfirmados', JSON.stringify(presentesConfirmados));
-                renderPresentes();
-                fecharModal();
-                alert(`Obrigado, ${nomePessoa}! Seu PIX foi confirmado! 🎉`);
-            } catch (error) {
-                console.error('Erro:', error);
-                alert('Ocorreu um erro ao salvar. Tente novamente.');
-            }
-        }
-
-        function fecharModal() {
-            document.getElementById('modal').classList.add('hidden');
-        }
+        document.getElementById('modalOverlay').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
 
         renderPresentes();
     </script>

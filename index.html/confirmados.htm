@@ -3,10 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Presentes Confirmados - Léo & Val</title>
+    <title>Presentes Confirmados - Leo & Val</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <script src="https://cdn.tailwindcss.com"></script>
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
         import { getFirestore, collection, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
@@ -29,115 +28,374 @@
         window.query = query;
         window.orderBy = orderBy;
     </script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        'serif': ['Playfair Display', 'serif'],
-                        'sans': ['Poppins', 'sans-serif'],
-                    },
-                    colors: {
-                        'halloween': {
-                            900: '#1a0a2e',
-                            800: '#2d1b4e',
-                            700: '#3d2b5e',
-                            600: '#f97316',
-                            500: '#fb923c',
-                            400: '#fdba74',
-                        }
-                    }
-                }
-            }
-        }
-    </script>
     <style>
-        .gradient-bg {
-            background: linear-gradient(135deg, #1a0a2e 0%, #2d1b4e 50%, #1a0a2e 100%);
+        :root {
+            --primary: #c9a86c;
+            --primary-dark: #a8894d;
+            --secondary: #f8f4ef;
+            --text: #3d3d3d;
+            --text-light: #777;
+            --white: #ffffff;
+            --border: #e8e0d4;
+            --green: #4a8b6f;
+            --green-light: #e8f5ee;
+            --blue: #5b8ec4;
+            --blue-light: #e8f0fa;
         }
-        .fade-in {
-            animation: fadeIn 0.5s ease-in;
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            color: var(--text);
+            background-color: var(--secondary);
+            line-height: 1.6;
         }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+
+        .hero {
+            background: linear-gradient(135deg, #faf6f1 0%, #f0e6d6 100%);
+            text-align: center;
+            padding: 60px 20px 50px;
+            position: relative;
+            overflow: hidden;
         }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50px;
+            right: -50px;
+            width: 200px;
+            height: 200px;
+            background: var(--primary);
+            opacity: 0.1;
+            border-radius: 50%;
+        }
+
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 10px;
+        }
+
+        .hero p {
+            color: var(--text-light);
+            font-size: 1.1rem;
+            letter-spacing: 2px;
+        }
+
+        .live-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 15px;
+            background: var(--green-light);
+            color: var(--green);
+            padding: 8px 18px;
+            border-radius: 25px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
         .pulse-live {
+            width: 8px;
+            height: 8px;
+            background: var(--green);
+            border-radius: 50%;
             animation: pulse-live 2s infinite;
         }
+
         @keyframes pulse-live {
             0%, 100% { opacity: 1; }
             50% { opacity: 0.4; }
         }
+
+        .stats-section {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 15px;
+        }
+
+        .stat-card {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 22px 15px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+            border: 1px solid var(--border);
+        }
+
+        .stat-card .icon {
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+        }
+
+        .stat-card .label {
+            font-size: 0.75rem;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
+
+        .stat-card .value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            font-family: 'Playfair Display', serif;
+        }
+
+        .stat-card.total .value { color: var(--primary-dark); }
+        .stat-card.fisico .value { color: var(--blue); }
+        .stat-card.pix .value { color: var(--green); }
+
+        .back-link {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 20px 20px;
+        }
+
+        .back-link a {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--primary-dark);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: color 0.3s;
+        }
+
+        .back-link a:hover {
+            color: var(--primary);
+        }
+
+        .list-section {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 10px 20px 60px;
+        }
+
+        .confirmado-card {
+            background: var(--white);
+            border-radius: 14px;
+            padding: 18px 22px;
+            margin-bottom: 12px;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.05);
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            transition: transform 0.2s;
+        }
+
+        .confirmado-card:hover {
+            transform: translateX(5px);
+        }
+
+        .confirmado-info {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .confirmado-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            flex-shrink: 0;
+        }
+
+        .confirmado-icon.fisico {
+            background: var(--blue-light);
+        }
+
+        .confirmado-icon.pix {
+            background: var(--green-light);
+        }
+
+        .confirmado-text .nome {
+            font-weight: 600;
+            color: var(--text);
+            font-size: 0.95rem;
+        }
+
+        .confirmado-text .presente {
+            color: var(--text-light);
+            font-size: 0.85rem;
+            margin-top: 2px;
+        }
+
+        .confirmado-meta {
+            text-align: right;
+            flex-shrink: 0;
+        }
+
+        .confirmado-tag {
+            display: inline-block;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            margin-bottom: 4px;
+        }
+
+        .confirmado-tag.fisico {
+            background: var(--blue-light);
+            color: var(--blue);
+        }
+
+        .confirmado-tag.pix {
+            background: var(--green-light);
+            color: var(--green);
+        }
+
+        .confirmado-data {
+            font-size: 0.75rem;
+            color: #aaa;
+        }
+
+        .confirmado-msg {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            font-style: italic;
+            margin-top: 6px;
+            padding-top: 6px;
+            border-top: 1px dashed var(--border);
+            width: 100%;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-light);
+        }
+
+        .empty-state .icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+
+        .empty-state h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.3rem;
+            margin-bottom: 8px;
+            color: var(--text);
+        }
+
+        .error-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #c0392b;
+        }
+
+        footer {
+            background: var(--text);
+            color: var(--white);
+            text-align: center;
+            padding: 25px 20px;
+        }
+
+        footer p {
+            font-size: 0.85rem;
+            opacity: 0.8;
+        }
+
+        footer .heart-footer {
+            color: var(--primary);
+        }
+
+        .fade-in {
+            animation: fadeIn 0.4s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 600px) {
+            .hero h1 { font-size: 2rem; }
+            .confirmado-card { flex-direction: column; align-items: flex-start; }
+            .confirmado-meta { text-align: left; width: 100%; margin-top: 8px; }
+        }
     </style>
 </head>
-<body class="gradient-bg min-h-screen font-sans text-white">
-    <!-- Header -->
-    <header class="text-center py-10 px-4">
-        <div class="max-w-4xl mx-auto">
-            <div class="text-5xl mb-4">🎁✨</div>
-            <h1 class="font-serif text-3xl md:text-5xl font-bold mb-4 text-halloween-500">
-                Presentes Confirmados
-            </h1>
-            <p class="text-gray-300 text-lg">Léo & Val - 14/02/2026</p>
-            <div class="mt-4 flex items-center justify-center gap-2">
-                <span class="w-3 h-3 bg-green-400 rounded-full pulse-live"></span>
-                <span class="text-green-400 text-sm">Atualizando em tempo real</span>
-            </div>
-        </div>
-    </header>
+<body>
 
-    <!-- Estatísticas -->
-    <section class="max-w-4xl mx-auto px-4 mb-8">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div class="bg-halloween-800/60 rounded-xl p-6 text-center border border-halloween-600/20">
-                <div class="text-3xl mb-2">🎁</div>
-                <p class="text-gray-400 text-sm">Total Confirmados</p>
-                <p id="total-confirmados" class="text-3xl font-bold text-halloween-400">0</p>
+    <section class="hero">
+        <div style="font-size: 2.5rem; margin-bottom: 10px;">🎁✨</div>
+        <h1>Presentes Confirmados</h1>
+        <p>Leo & Val — 31 de Outubro de 2026</p>
+        <div class="live-badge">
+            <span class="pulse-live"></span>
+            Atualizando em tempo real
+        </div>
+    </section>
+
+    <section class="stats-section">
+        <div class="stats-grid">
+            <div class="stat-card total">
+                <div class="icon">🎁</div>
+                <div class="label">Total</div>
+                <div class="value" id="total-confirmados">0</div>
             </div>
-            <div class="bg-halloween-800/60 rounded-xl p-6 text-center border border-halloween-600/20">
-                <div class="text-3xl mb-2">📦</div>
-                <p class="text-gray-400 text-sm">Presentes Físicos</p>
-                <p id="total-fisico" class="text-3xl font-bold text-blue-400">0</p>
+            <div class="stat-card fisico">
+                <div class="icon">📦</div>
+                <div class="label">Físicos</div>
+                <div class="value" id="total-fisico">0</div>
             </div>
-            <div class="bg-halloween-800/60 rounded-xl p-6 text-center border border-halloween-600/20">
-                <div class="text-3xl mb-2">💰</div>
-                <p class="text-gray-400 text-sm">Via PIX</p>
-                <p id="total-pix" class="text-3xl font-bold text-green-400">0</p>
+            <div class="stat-card pix">
+                <div class="icon">💰</div>
+                <div class="label">Via Pix</div>
+                <div class="value" id="total-pix">0</div>
             </div>
         </div>
     </section>
 
-    <!-- Botão voltar -->
-    <div class="max-w-4xl mx-auto px-4 mb-6">
-        <a href="index.html" class="inline-flex items-center gap-2 text-halloween-400 hover:text-halloween-500 transition-all">
+    <div class="back-link">
+        <a href="index.html">
             <i class="fas fa-arrow-left"></i>
             Voltar para Lista de Presentes
         </a>
     </div>
 
-    <!-- Lista -->
-    <main class="max-w-4xl mx-auto px-4 pb-16">
-        <div id="lista-confirmados" class="space-y-3">
-            <div class="text-center py-12 text-gray-500">
-                <div class="text-4xl mb-4">🎃</div>
+    <section class="list-section">
+        <div id="lista-confirmados">
+            <div class="empty-state">
+                <div class="icon">⏳</div>
                 <p>Carregando presentes confirmados...</p>
             </div>
         </div>
-    </main>
+    </section>
 
-    <!-- Footer -->
-    <footer class="text-center py-8 text-gray-500 text-sm">
-        <p>Com muito amor 💕 Léo & Val - 2026</p>
+    <footer>
+        <p>Feito com <span class="heart-footer">♥</span> por Leo & Val</p>
+        <p style="margin-top: 5px; font-size: 0.75rem;">31 de Outubro de 2026</p>
     </footer>
 
     <script>
         function formatarData(data) {
             if (!data) return 'Agora mesmo';
             const d = data.toDate ? data.toDate() : new Date(data);
-            return d.toLocaleString('pt-BR', { 
-                day: '2-digit', 
-                month: '2-digit', 
+            return d.toLocaleString('pt-BR', {
+                day: '2-digit',
+                month: '2-digit',
                 year: 'numeric',
                 hour: '2-digit',
                 minute: '2-digit'
@@ -146,16 +404,15 @@
 
         function renderConfirmados(docs) {
             const lista = document.getElementById('lista-confirmados');
-            
             let fisico = 0;
             let pix = 0;
 
             if (docs.length === 0) {
                 lista.innerHTML = `
-                    <div class="text-center py-12 text-gray-500">
-                        <div class="text-4xl mb-4">🎁</div>
-                        <p>Nenhum presente confirmado ainda.</p>
-                        <p class="text-sm mt-2">Seja o primeiro a presentear!</p>
+                    <div class="empty-state fade-in">
+                        <div class="icon">🎁</div>
+                        <h3>Nenhum presente ainda</h3>
+                        <p>Seja o primeiro a confirmar um presente para Leo & Val!</p>
                     </div>
                 `;
                 document.getElementById('total-confirmados').textContent = '0';
@@ -170,27 +427,28 @@
                 return tB - tA;
             });
 
-            lista.innerHTML = ordenados.map((doc, index) => {
-                const d = doc.data || {};
-                if (d.tipo === 'fisico') fisico++;
-                if (d.tipo === 'pix') pix++;
-                
-                const icone = d.tipo === 'pix' ? '💰' : '📦';
-                const cor = d.tipo === 'pix' ? 'text-green-400' : 'text-blue-400';
-                const tipoLabel = d.tipo === 'pix' ? 'PIX' : 'Presente Físico';
-                
+            lista.innerHTML = ordenados.map((d, index) => {
+                const tipo = d.tipo || 'fisico';
+                const isPix = tipo === 'pix';
+                if (isPix) pix++;
+                else fisico++;
+
+                const icone = isPix ? '💰' : '📦';
+                const tagLabel = isPix ? 'Pix' : 'Presente Físico';
+
                 return `
-                    <div class="bg-halloween-800/60 rounded-xl p-5 border border-halloween-600/20 flex items-center justify-between fade-in" style="animation-delay: ${index * 0.05}s">
-                        <div class="flex items-center gap-4">
-                            <div class="text-3xl">${icone}</div>
-                            <div>
-                                <p class="font-semibold text-white">${d.nome || 'Anônimo'}</p>
-                                <p class="text-gray-400 text-sm">${d.presente || 'Presente'}</p>
+                    <div class="confirmado-card fade-in" style="animation-delay: ${index * 0.05}s">
+                        <div class="confirmado-info">
+                            <div class="confirmado-icon ${tipo}">${icone}</div>
+                            <div class="confirmado-text">
+                                <div class="nome">${d.nome || 'Anônimo'}</div>
+                                <div class="presente">${d.presente || 'Presente'}</div>
+                                ${d.mensagem ? `<div class="confirmado-msg">"${d.mensagem}"</div>` : ''}
                             </div>
                         </div>
-                        <div class="text-right">
-                            <span class="${cor} text-xs font-medium bg-white/5 px-3 py-1 rounded-full">${tipoLabel}</span>
-                            <p class="text-gray-500 text-xs mt-1">${formatarData(d.data)}</p>
+                        <div class="confirmado-meta">
+                            <span class="confirmado-tag ${tipo}">${tagLabel}</span>
+                            <div class="confirmado-data">${formatarData(d.data)}</div>
                         </div>
                     </div>
                 `;
@@ -201,7 +459,6 @@
             document.getElementById('total-pix').textContent = pix;
         }
 
-        // Escutar mudanças em tempo real
         const q = window.query(window.collection(window.db, 'confirmados'), window.orderBy('data', 'desc'));
         window.onSnapshot(q, (snapshot) => {
             const docs = [];
@@ -210,10 +467,10 @@
         }, (error) => {
             console.error('Erro:', error);
             document.getElementById('lista-confirmados').innerHTML = `
-                <div class="text-center py-12 text-red-400">
-                    <div class="text-4xl mb-4">⚠️</div>
-                    <p>Erro ao carregar dados.</p>
-                    <p class="text-sm mt-2">Verifique se o Firestore está configurado corretamente.</p>
+                <div class="error-state fade-in">
+                    <div class="icon" style="font-size: 2.5rem; margin-bottom: 10px;">⚠️</div>
+                    <h3 style="font-family: 'Playfair Display', serif; margin-bottom: 8px;">Erro ao carregar</h3>
+                    <p>Verifique se o Firestore está configurado corretamente.</p>
                 </div>
             `;
         });
